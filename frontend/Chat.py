@@ -34,6 +34,18 @@ chat_brutalism_css = """
         border-radius: 0px !important;
         box-shadow: 10px 10px 0px #000000 !important;
         background-color: #FFFFFF !important;
+        color: #000000 !important;
+    }
+
+    div[role="dialog"] p, 
+    div[role="dialog"] h1, 
+    div[role="dialog"] h2, 
+    div[role="dialog"] span {
+        color: #000000 !important;
+    }
+    
+    div[role="dialog"] button[kind="secondary"] {
+        color: #000000 !important;
     }
 
 
@@ -206,6 +218,9 @@ if prompt := st.chat_input("Ask a question..."):
             if isinstance(api_data, dict):
                 bot_answer = api_data.get("answer", "Error generating response.")
                 citations = api_data.get("citations", [])
+                
+                if api_data.get("cached"):
+                    bot_answer += "  \n\n⚡ *(Served from Cache)*"
             else:
                 bot_answer = str(api_data)
                 citations = []
