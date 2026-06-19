@@ -5,7 +5,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from services.rag_engine import setup_rag_chain
-from services.semantic_cache import init_cache
 from api import chat, upload, auth, faq
 
 load_dotenv()
@@ -17,7 +16,6 @@ app.state.rag_chain = None
 
 @app.on_event("startup")
 async def startup_event():
-    init_cache()
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
