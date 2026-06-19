@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 from api_client import get_chat_response
 
 st.set_page_config(page_title="Med-Bot", layout="centered")
@@ -127,6 +128,39 @@ st.markdown(chat_brutalism_css, unsafe_allow_html=True)
 
 @st.dialog("Welcome to Med-Bot")
 def role_selection_modal():
+    if st.session_state.get("show_admin_login", False):
+        st.write("Please log in to access Admin role:")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Log In", use_container_width=True):
+                try:
+                    response = requests.post(
+                        "https://med-bot-vsmf.onrender.com/login",
+                        json={"username": username, "password": password},
+                    )
+                    if response.status_code == 200:
+                        st.session_state.logged_in = True
+                        st.session_state.current_role = "Admin"
+                        st.session_state.messages = [
+                            {
+                                "role": "assistant",
+                                "content": "Hello! I am ready to assist you as an Admin. How can I help?",
+                            }
+                        ]
+                        st.session_state.show_admin_login = False
+                        st.rerun()
+                    else:
+                        st.error("❌ Invalid username or password.")
+                except Exception as e:
+                    st.error(f"Cannot connect to server. Error: {e}")
+        with col2:
+            if st.button("Cancel", use_container_width=True):
+                st.session_state.show_admin_login = False
+                st.rerun()
+        return
+
     st.write("Please select your role so I can tailor my assistance to you:")
 
     col1, col2 = st.columns(2)
@@ -154,14 +188,18 @@ def role_selection_modal():
             st.rerun()
 
         if st.button("Admin", use_container_width=True):
-            st.session_state.current_role = "Admin"
-            st.session_state.messages = [
-                {
-                    "role": "assistant",
-                    "content": "Hello! I am ready to assist you as an Admin. How can I help?",
-                }
-            ]
-            st.rerun()
+            if st.session_state.get("logged_in", False):
+                st.session_state.current_role = "Admin"
+                st.session_state.messages = [
+                    {
+                        "role": "assistant",
+                        "content": "Hello! I am ready to assist you as an Admin. How can I help?",
+                    }
+                ]
+                st.rerun()
+            else:
+                st.session_state.show_admin_login = True
+                st.rerun()
 
 
 if "current_role" not in st.session_state:
@@ -177,11 +215,9 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
         
         if st.session_state.current_role == "Admin" and "citations" in message and message["citations"]:
-            with st.expander("📚 View Document Sources"):
+            with st.expander("View Document Sources"):
                 for idx, citation in enumerate(message["citations"]):
-                    st.markdown(f"**Source {idx + 1}:** `{citation['file']}` (Page {citation['page']})")
-                    st.caption(f"> {citation['content_preview']}")
-                    st.markdown("---")
+                    st.markdown(f"**Source {idx + 1}:** `{citation['file']}`")
 
 if prompt := st.chat_input("Ask a question..."):
     with st.chat_message("user"):
@@ -206,7 +242,6 @@ if prompt := st.chat_input("Ask a question..."):
                 with st.expander("View Document Sources"):
                     for idx, citation in enumerate(citations):
                         st.markdown(f"**Source {idx + 1}:** `{citation['file']}`")
-                        break
 
     st.session_state.messages.append({
         "role": "assistant", 
