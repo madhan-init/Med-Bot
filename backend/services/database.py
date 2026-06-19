@@ -21,7 +21,7 @@ else:
     # Supabase Supavisor pooler doesn't use the .project-ref in the username anymore
     if "pooler.supabase.com" in DATABASE_URL:
         import re
-        DATABASE_URL = re.sub(r'(://[^:]+)\.[a-z0-9]+:', r'\1:', DATABASE_URL)
+        DATABASE_URL = re.sub(r'(://[^:.]+)\.[a-z0-9]+:', r'\1:', DATABASE_URL)
         
     engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
