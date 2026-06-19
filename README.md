@@ -6,31 +6,10 @@ Med-Bot is an AI-powered medical assistant application that leverages Retrieval-
 
 ## Features
 
-- **Role-Based Access Control**: Tailored chat experiences and responses based on the user's role (Visitor, Patient, Doctor, Admin).
+- **Role-Based Access Control**: Tailored chat experiences and responses based on the user's role (Visitor, Patient, Admin).
 - **RAG Engine**: Retrieves knowledge from uploaded documents using LangChain and a FAISS local vector store.
 - **Document Sourcing & Citations**: Admins have the exclusive ability to view document sources and page citations for the AI's answers.
-- **Modern Chat Interface**: A custom-styled, brutalism-inspired Streamlit frontend.
 - **Robust API**: A scalable FastAPI backend handling chat generation, document uploads, authentication, and FAQs.
-
----
-
-## Project Structure
-
-```text
-Med-Bot/
-├── backend/            # FastAPI server, RAG engine, and API endpoints
-│   ├── api/            # API routers (chat, upload, auth, faq)
-│   ├── services/       # Core business logic and RAG setup
-│   └── main.py         # FastAPI application entry point
-├── frontend/           # Streamlit application
-│   ├── pages/          # Additional Streamlit pages
-│   ├── api_client.py   # Connection logic to the FastAPI backend
-│   └── Chat.py         # Main chat interface and UI configuration
-├── data/               # Local data storage 
-│   └── vector_store/   # FAISS vector database files
-├── assets/             # Static assets (images, icons, etc.)
-└── requirements.txt    # Project Python dependencies
-```
 
 ---
 
@@ -95,6 +74,6 @@ streamlit run Chat.py
 ## Usage Roles
 
 Upon launching the frontend, you will be prompted to select a role. 
-- **Visitor / Patient / Doctor**: You will receive answers tailored to your context and clearance.
+- **Visitor / Patient**: You will receive answers tailored to your context and clearance.
 - **Admin**: Has elevated privileges, including the ability to see the specific document citations and exact pages where the AI retrieved its information.
 

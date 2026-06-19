@@ -142,16 +142,6 @@ def role_selection_modal():
             ]
             st.rerun()
 
-        if st.button("Doctor", use_container_width=True):
-            st.session_state.current_role = "Doctor"
-            st.session_state.messages = [
-                {
-                    "role": "assistant",
-                    "content": "Hello! I am ready to assist you as a Doctor. How can I help?",
-                }
-            ]
-            st.rerun()
-
     with col2:
         if st.button("Patient", use_container_width=True):
             st.session_state.current_role = "Patient"
