@@ -187,19 +187,19 @@ def role_selection_modal():
             ]
             st.rerun()
 
-        if st.button("Admin", use_container_width=True):
-            if st.session_state.get("logged_in", False):
-                st.session_state.current_role = "Admin"
-                st.session_state.messages = [
-                    {
-                        "role": "assistant",
-                        "content": "Hello! I am ready to assist you as an Admin. How can I help?",
-                    }
-                ]
-                st.rerun()
-            else:
-                st.session_state.show_admin_login = True
-                st.rerun()
+    if st.button("Admin", use_container_width=True):
+        if st.session_state.get("logged_in", False):
+            st.session_state.current_role = "Admin"
+            st.session_state.messages = [
+                {
+                    "role": "assistant",
+                    "content": "Hello! I am ready to assist you as an Admin. How can I help?",
+                }
+            ]
+            st.rerun()
+        else:
+            st.session_state.show_admin_login = True
+            st.rerun()
 
 
 if "current_role" not in st.session_state:
@@ -216,8 +216,9 @@ for message in st.session_state.messages:
         
         if st.session_state.current_role == "Admin" and "citations" in message and message["citations"]:
             with st.expander("View Document Sources"):
-                for idx, citation in enumerate(message["citations"]):
-                    st.markdown(f"**Source {idx + 1}:** `{citation['file']}`")
+                unique_files = list(dict.fromkeys(c['file'] for c in message["citations"]))
+                for idx, file_name in enumerate(unique_files):
+                    st.markdown(f"**Source {idx + 1}:** `{file_name}`")
 
 if prompt := st.chat_input("Ask a question..."):
     with st.chat_message("user"):
@@ -240,8 +241,9 @@ if prompt := st.chat_input("Ask a question..."):
             
             if citations and st.session_state.current_role == "Admin":
                 with st.expander("View Document Sources"):
-                    for idx, citation in enumerate(citations):
-                        st.markdown(f"**Source {idx + 1}:** `{citation['file']}`")
+                    unique_files = list(dict.fromkeys(c['file'] for c in citations))
+                    for idx, file_name in enumerate(unique_files):
+                        st.markdown(f"**Source {idx + 1}:** `{file_name}`")
 
     st.session_state.messages.append({
         "role": "assistant", 
