@@ -49,6 +49,8 @@ htmlcov/
 .coverage.*
 .cache
 .pytest_cache/
-
+architecture.excalidraw
+flow.md
+diagram.md
 # Jupyter Notebook
 .ipynb_checkpoints
