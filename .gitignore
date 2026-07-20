@@ -51,6 +51,7 @@ htmlcov/
 .pytest_cache/
 architecture.excalidraw
 flow.md
-diagram.md
+
+context.md
 # Jupyter Notebook
 .ipynb_checkpoints
